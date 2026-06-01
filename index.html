@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation SIO SISR — Ayoub Houraoui</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Polices & Icônes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Barre latérale de navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fa-solid fa-server"></i>
+                <span>SIO SISR</span>
+            </div>
+            <p class="subtitle">Ayoub Houraoui</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="https://ayoubhry.github.io/portfolio/" class="nav-external"><i class="fa-solid fa-arrow-left"></i> Mon Portfolio</a>
+            
+            <div class="nav-group">
+                <button class="nav-item active" data-target="accueil"><i class="fa-solid fa-house"></i> Accueil</button>
+            </div>
+
+            <div class="nav-section-title">Conteneurs</div>
+            <div class="nav-group">
+                <button class="nav-item" data-target="docker"><i class="fa-brands fa-docker"></i> Docker</button>
+                <button class="nav-item" data-target="docker-compose"><i class="fa-solid fa-cubes"></i> Docker Compose</button>
+            </div>
+
+            <div class="nav-section-title">Réseau</div>
+            <div class="nav-group">
+                <button class="nav-item" data-target="vlan"><i class="fa-solid fa-network-wired"></i> VLAN — Packet Tracer</button>
+                <button class="nav-item" data-target="wireguard"><i class="fa-solid fa-shield-halved"></i> VPN — WireGuard</button>
+            </div>
+
+            <div class="nav-section-title">Services</div>
+            <div class="nav-group">
+                <button class="nav-item" data-target="glpi"><i class="fa-solid fa-ticket"></i> GLPI</button>
+                <button class="nav-item" data-target="samba"><i class="fa-solid fa-hdd"></i> Samba (NAS)</button>
+                <button class="nav-item" data-target="nextcloud"><i class="fa-solid fa-cloud"></i> NextCloud</button>
+                <button class="nav-item" data-target="pihole"><i class="fa-solid fa-filter"></i> Pi-Hole</button>
+                <button class="nav-item" data-target="grafana"><i class="fa-solid fa-chart-line"></i> Grafana</button>
+            </div>
+
+            <div class="nav-section-title">Windows</div>
+            <div class="nav-group">
+                <button class="nav-item" data-target="active-directory"><i class="fa-brands fa-windows"></i> Active Directory</button>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="theme-toggle">
+                <button id="theme-btn"><i class="fa-solid fa-sun"></i> Mode Clair</button>
+            </div>
+            <div class="socials">
+                <a href="https://github.com/ayoubhry" target="_blank"><i class="fa-brands fa-github"></i></a>
+                <a href="https://fr.linkedin.com/in/ayoub-houraoui" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Zone de contenu principal -->
+    <main class="content-container">
+        
+        <!-- SECTION : ACCUEIL -->
+        <section id="accueil" class="content-section active">
+            <h1>Documentation SIO SISR</h1>
+            <p class="lead">Bienvenue sur ma documentation technique rédigée dans le cadre de mon <strong>BTS SIO option SISR</strong> au lycée Jean Rostand à Caen.</p>
+            <p>Ce site regroupe l'ensemble des procédures d'installation, de configuration et d'administration que j'ai réalisées durant ma formation et mon stage.</p>
+            
+            <h2>🗂️ Organisation</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Contenu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Conteneurs</strong></td><td>Installation Docker, Docker Compose, Portainer, HomePage</td></tr>
+                        <tr><td><strong>Réseau</strong></td><td>VLANs avec Cisco Packet Tracer, VPN WireGuard</td></tr>
+                        <tr><td><strong>Services</strong></td><td>GLPI, Samba, NextCloud, Pi-Hole, Grafana</td></tr>
+                        <tr><td><strong>Windows</strong></td><td>Active Directory, GPO, DNS/DHCP sous Windows Server 2019</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>👤 Profil</h2>
+            <ul>
+                <li><strong>Formation :</strong> BTS SIO – option SISR (2025–2027)</li>
+                <li><strong>Établissement :</strong> Lycée Jean Rostand, Caen</li>
+                <li><strong>Stage 2026 :</strong> DSI – Mairie d'Hérouville-Saint-Clair</li>
+            </ul>
+
+            <div class="callout info">
+                <div class="callout-title"><i class="fa-solid fa-circle-info"></i> Note</div>
+                <p>Cette documentation est mise à jour au fil de ma formation. Les procédures ont été validées sur des environnements virtualisés (Proxmox / VirtualBox).</p>
+            </div>
+        </section>
+
+        <!-- SECTION : DOCKER -->
+        <section id="docker" class="content-section">
+            <h1>Docker</h1>
+            <p>Procédure d'installation complète de l'environnement de conteneurisation Docker sur un système <strong>Debian 12 (Bookworm)</strong>.</p>
+            
+            <h2>1. Prérequis et dépendances</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo apt update
+sudo apt install -y ca-certificates curl gnupg lsb-release</code></pre>
+
+            <h2>2. Ajout de la clé GPG officielle et du dépôt</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null</code></pre>
+
+            <h2>3. Installation du moteur Docker</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
+
+            <h2>4. Post-installation (Utilisation sans sudo)</h2>
+            <p>Par défaut, l'exécution des commandes Docker nécessite les privilèges root. Ajoutons l'utilisateur actuel au groupe <code>docker</code> :</p>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo usermod -aG docker $USER
+newgrp docker</code></pre>
+        </section>
+
+        <!-- SECTION : DOCKER COMPOSE -->
+        <section id="docker-compose" class="content-section">
+            <h1>Docker Compose</h1>
+            <p>Gestion et déploiement d'architectures multi-conteneurs à l'aide de fichiers descriptifs YAML.</p>
+
+            <h2>1. Structure type d'un projet</h2>
+            <p>Il est recommandé de dédier un répertoire par stack applicative :</p>
+            <pre><code>📁 mon-application/
+└── 📄 docker-compose.yml</code></pre>
+
+            <h2>2. Exemple concret : Serveur Web Nginx avec volumes</h2>
+            <div class="code-header"><span>YAML</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code class="language-yaml">version: '3.8'
+
+services:
+  webserver:
+    image: nginx:latest
+    container_name: nginx_production
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    restart: unless-stopped</code></pre>
+
+            <h2>3. Commandes fondamentales d'administration</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Action</th><th>Commande</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Démarrer la stack en tâche de fond</td><td><code>docker compose up -d</code></td></tr>
+                        <tr><td>Arrêter et supprimer les conteneurs</td><td><code>docker compose down</code></td></tr>
+                        <tr><td>Consulter les logs en temps réel</td><td><code>docker compose logs -f</code></td></tr>
+                        <tr><td>Vérifier le statut des conteneurs</td><td><code>docker compose ps</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION : VLAN -->
+        <section id="vlan" class="content-section">
+            <h1>VLAN — Cisco Packet Tracer</h1>
+            <p>Configuration de réseaux locaux virtuels (VLAN) pour segmenter les flux et optimiser la sécurité au sein d'un commutateur Cisco.</p>
+
+            <h2>1. Création et nommage des VLANs</h2>
+            <div class="code-header"><span>Cisco CLI</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-cisco">Switch> enable
+Switch# configure terminal
+Switch(config)# vlan 10
+Switch(config-vlan)# name Informatique
+Switch(config-vlan)# exit
+Switch(config)# vlan 20
+Switch(config-vlan)# name Administratif
+Switch(config-vlan)# exit</code></pre>
+
+            <h2>2. Assignation des ports d'accès (Access)</h2>
+            <p>Exemple d'affectation de l'interface FastEthernet 0/1 au VLAN 10 :</p>
+            <div class="code-header"><span>Cisco CLI</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-cisco">Switch(config)# interface fastEthernet 0/1
+Switch(config-if)# switchport mode access
+Switch(config-if)# switchport access vlan 10
+Switch(config-if)# exit</code></pre>
+
+            <h2>3. Configuration d'une liaison Trunk</h2>
+            <p>Pour faire transiter plusieurs VLANs vers un routeur ou un autre commutateur sur l'interface GigabitEthernet 0/1 :</p>
+            <div class="code-header"><span>Cisco CLI</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-cisco">Switch(config)# interface gigabitEthernet 0/1
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# exit</code></pre>
+        </section>
+
+        <!-- SECTION : WIREGUARD -->
+        <section id="wireguard" class="content-section">
+            <h1>VPN — WireGuard</h1>
+            <p>Mise en œuvre d'un tunnel VPN sécurisé, moderne et performant pour l'accès distant à l'infrastructure.</p>
+
+            <h2>1. Installation du package</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo apt update && sudo apt install -y wireguard</code></pre>
+
+            <h2>2. Génération des paires de clés (Serveur)</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">wg genkey | sudo tee /etc/wireguard/server_private.key | wg pubkey | sudo tee /etc/wireguard/server_public.key</code></pre>
+
+            <h2>3. Configuration du fichier Serveur (`/etc/wireguard/wg0.conf`)</h2>
+            <div class="code-header"><span>Configuration INI</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code class="language-ini">[Interface]
+Address = 10.0.0.1/24
+SaveConfig = true
+ListenPort = 51820
+PrivateKey = [Contenu_De_server_private.key]
+
+# Exemple de déclaration d'un client (Peer)
+[Peer]
+PublicKey = [Cle_Publique_Du_Client]
+AllowedIPs = 10.0.0.2/32</code></pre>
+
+            <h2>4. Activation du service tunnel VPN</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo systemctl enable wg-quick@wg0
+sudo systemctl start wg-quick@wg0</code></pre>
+        </section>
+
+        <!-- SECTION : GLPI -->
+        <section id="glpi" class="content-section">
+            <h1>GLPI (Gestionnaire Libre de Parc Informatique)</h1>
+            <p>Outil ITSM open-source de gestion de parc et de tickets d'incidents.</p>
+
+            <h2>Installation manuelle (Debian 12)</h2>
+            <h3>1. Stack LAMP</h3>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo apt install -y apache2 mariadb-server php php-mysql php-curl php-gd php-intl \
+php-mbstring php-xml php-zip php-ldap php-apcu php-xmlrpc php-soap libapache2-mod-php</code></pre>
+
+            <h3>2. Créer la base de données</h3>
+            <div class="code-header"><span>SQL</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-sql">CREATE DATABASE glpi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'glpiuser'@'localhost' IDENTIFIED BY 'MotDePasseForte123!';
+GRANT ALL PRIVILEGES ON glpi.* TO 'glpiuser'@'localhost';
+FLUSH PRIVILEGES;</code></pre>
+
+            <h2>Déploiement alternative via Docker Compose</h2>
+            <div class="code-header"><span>YAML</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code class="language-yaml">name: glpi
+services:
+  glpi:
+    image: glpi/glpi:latest
+    restart: unless-stopped
+    container_name: glpi
+    ports:
+      - "8282:80"
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: glpi</code></pre>
+        </section>
+
+        <!-- SECTION : SAMBA -->
+        <section id="samba" class="content-section">
+            <h1>Samba (NAS)</h1>
+            <p>Mise en place d'un serveur de partage de fichiers multiplateforme (Windows/Linux) s'appuyant sur le protocole SMB.</p>
+
+            <h2>1. Installation du service Samba</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo apt update && sudo apt install -y samba samba-common-bin</code></pre>
+
+            <h2>2. Création de l'arborescence et gestion des droits locaux</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo mkdir -p /srv/samba/partage_sisr
+sudo chown -R nobody:nogroup /srv/samba/partage_sisr
+sudo chmod -R 775 /srv/samba/partage_sisr</code></pre>
+
+            <h2>3. Édition du fichier de configuration (`/etc/samba/smb.conf`)</h2>
+            <p>Ajoutez le bloc suivant tout à la fin du fichier :</p>
+            <div class="code-header"><span>Configuration INI</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code class="language-ini">[Partage-SISR]
+   comment = Espace d'échange Réseau
+   path = /srv/samba/partage_sisr
+   browseable = yes
+   read only = no
+   guest ok = yes
+   create mask = 0775
+   directory mask = 0775</code></pre>
+
+            <h2>4. Application des paramètres</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo testparm
+sudo systemctl restart smbd
+sudo systemctl restart nmbd</code></pre>
+        </section>
+
+        <!-- SECTION : NEXTCLOUD -->
+        <section id="nextcloud" class="content-section">
+            <h1>NextCloud</h1>
+            <p>Solution de cloud privé open-source permettant le stockage, le chiffrement et le partage collaboratif de fichiers.</p>
+            <h2>Déploiement Docker Compose</h2>
+            <div class="code-header"><span>YAML</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+<pre><code class="language-yaml">version: '3'
+services:
+  nextcloud-db:
+    image: mariadb:10.11
+    restart: always
+    environment:
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: PasswordSISR123!
+  nextcloud:
+    image: nextcloud:latest
+    ports:
+      - "8181:80"
+    restart: always</code></pre>
+        </section>
+
+        <!-- SECTION : PI-HOLE -->
+        <section id="pihole" class="content-section">
+            <h1>Pi-Hole</h1>
+            <p>Bloqueur de publicités et traqueurs au niveau DNS faisant office de puit de filtrage (DNS Sinkhole) pour le réseau local.</p>
+            <h2>Installation automatisée</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">sudo apt install curl -y
+curl -sSL https://install.pi-hole.net | bash</code></pre>
+            <p>Une interface graphique d'installation s'ouvre pour valider l'adresse IP fixe et l'interface d'écoute. Après installation, modifiez le mot de passe web de sécurité :</p>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">pihole -a -p</code></pre>
+        </section>
+
+        <!-- SECTION : GRAFANA -->
+        <section id="grafana" class="content-section">
+            <h1>Grafana</h1>
+            <p>Plateforme de supervision, d'analyse et de visualisation graphique de métriques systèmes.</p>
+            <h2>Installation autonome</h2>
+            <div class="code-header"><span>Bash</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-bash">wget https://dl.grafana.com/oss/release/grafana_10.4.2_amd64.deb
+sudo dpkg -i grafana_10.4.2_amd64.deb
+sudo systemctl daemon-reload
+sudo systemctl start grafana-server
+sudo systemctl enable grafana-server</code></pre>
+            <div class="callout info">
+                <div class="callout-title"><i class="fa-solid fa-circle-info"></i> Accès</div>
+                <p>Interface accessible depuis votre navigateur : <code>http://[IP_SERVEUR]:3000</code> (identifiants par défaut : <code>admin</code> / <code>admin</code>).</p>
+            </div>
+        </section>
+
+        <!-- SECTION : ACTIVE DIRECTORY -->
+        <section id="active-directory" class="content-section">
+            <h1>Active Directory</h1>
+            <p>Déploiement et administration d'un annuaire centralisé <strong>Active Directory DS</strong> sous Windows Server 2019.</p>
+            
+            <div class="callout note">
+                <div class="callout-title"><i class="fa-solid fa-pen-to-square"></i> Environnement cible</div>
+                <p><strong>Windows Server 2019 Standard</strong> configuré en adresse IP Statique locale avant promotion.</p>
+            </div>
+
+            <h2>1. Configuration IP Initiale</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Paramètre Réseau</th><th>Valeur Appliquée</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Adresse IPv4 fixe</td><td><code>192.168.1.10</code></td></tr>
+                        <tr><td>Masque de sous-réseau</td><td><code>255.255.255.0</code></td></tr>
+                        <tr><td>Serveur DNS préféré</td><td><code>127.0.0.1</code> (Boucle locale)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>2. Ajout des Rôles via PowerShell</h2>
+            <p>Il est possible de passer par l'assistant graphique ou d'accélérer l'installation via la console d'administration PowerShell root :</p>
+            <div class="code-header"><span>PowerShell</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-powershell">Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools</code></pre>
+
+            <h2>3. Promotion en Contrôleur de Domaine (Nouveau Domaine)</h2>
+            <div class="code-header"><span>PowerShell</span><button class="copy-btn"><i class="fa-regular fa-copy"></i> Copier</button></div>
+            <pre><code class="language-powershell">Install-ADDSForest -DomainName "rostand.local" -CreateDnsDelegation:$false -DatabasePath "C:\Windows\NTDS" -LogPath "C:\Windows\NTDS" -SysvolPath "C:\Windows\SYSVOL" -Force</code></pre>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        © 2026 Ayoub Houraoui – BTS SIO SISR · Lycée Jean Rostand · Caen
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,62 +1,116 @@
 document.addEventListener("DOMContentLoaded", () => {
-    
-    // 1. GESTION DE LA NAVIGATION INTERNE
-    const navItems = document.querySelectorAll(".nav-item");
-    const sections = document.querySelectorAll(".content-section");
 
-    navItems.forEach(item => {
-        item.addEventListener("click", () => {
-            // Retirer la classe active de l'ancien bouton
-            document.querySelector(".nav-item.active").classList.remove("active");
-            // Ajouter la classe active sur le bouton cliqué
-            item.classList.add("active");
+  /* ── 1. THEME (identique au portfolio) ─────────────── */
+  const htmlEl = document.documentElement;
+  const saved  = localStorage.getItem("theme") || "dark";
+  htmlEl.setAttribute("data-theme", saved);
 
-            // Cacher l'ancienne section active
-            document.querySelector(".content-section.active").classList.remove("active");
-            // Afficher la section ciblée
-            const target = item.getAttribute("data-target");
-            document.getElementById(target).classList.add("active");
+  function applyTheme(theme) {
+    htmlEl.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }
 
-            // Remonter automatiquement en haut de page
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        });
+  ["themeToggle", "themeToggleMobile"].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.addEventListener("click", () => {
+        const next = htmlEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        applyTheme(next);
+      });
+    }
+  });
+
+  /* ── 2. NAVIGATION INTERNE ─────────────────────────── */
+  const navItems = document.querySelectorAll(".nav-item[data-target]");
+  const sections = document.querySelectorAll(".content-section");
+
+  function activateSection(targetId) {
+    // Mise à jour nav
+    document.querySelector(".nav-item.active")?.classList.remove("active");
+    document.querySelector(`.nav-item[data-target="${targetId}"]`)?.classList.add("active");
+
+    // Mise à jour contenu
+    document.querySelector(".content-section.active")?.classList.remove("active");
+    const target = document.getElementById(targetId);
+    if (target) {
+      target.classList.add("active");
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      // Trigger animations
+      requestAnimationFrame(() => triggerAnimations(target));
+    }
+
+    // Fermer le menu mobile
+    closeMobileSidebar();
+  }
+
+  navItems.forEach(item => {
+    item.addEventListener("click", () => {
+      activateSection(item.getAttribute("data-target"));
     });
+  });
 
-    // 2. GESTION DU COMMUTATEUR DE THÈME (CLAIR / SOMBRE)
-    const themeBtn = document.getElementById("theme-btn");
-    const htmlElement = document.documentElement;
+  // Cartes de la page d'accueil cliquables
+  document.querySelectorAll(".category-card[data-target]").forEach(card => {
+    card.addEventListener("click", () => {
+      activateSection(card.getAttribute("data-target"));
+    });
+  });
 
-    themeBtn.addEventListener("click", () => {
-        const currentTheme = htmlElement.getAttribute("data-theme");
-        
-        if (currentTheme === "dark") {
-            htmlElement.setAttribute("data-theme", "light");
-            themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i> Mode Sombre';
-        } else {
-            htmlElement.setAttribute("data-theme", "dark");
-            themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i> Mode Clair';
+  /* ── 3. MOBILE SIDEBAR ──────────────────────────────── */
+  const sidebar  = document.getElementById("sidebar");
+  const overlay  = document.getElementById("sidebarOverlay");
+  const burger   = document.getElementById("burgerBtn");
+
+  function closeMobileSidebar() {
+    sidebar?.classList.remove("open");
+    overlay?.classList.remove("visible");
+    burger?.classList.remove("open");
+  }
+
+  burger?.addEventListener("click", () => {
+    const isOpen = sidebar.classList.toggle("open");
+    overlay.classList.toggle("visible", isOpen);
+    burger.classList.toggle("open", isOpen);
+  });
+  overlay?.addEventListener("click", closeMobileSidebar);
+
+  /* ── 4. COPIE DE CODE ───────────────────────────────── */
+  document.querySelectorAll(".copy-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const pre = btn.closest(".code-header")?.nextElementSibling;
+      const codeEl = pre?.querySelector("code") || pre;
+      if (!codeEl) return;
+
+      navigator.clipboard.writeText(codeEl.innerText).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copié !';
+        btn.classList.add("copied");
+        setTimeout(() => {
+          btn.innerHTML = orig;
+          btn.classList.remove("copied");
+        }, 2000);
+      });
+    });
+  });
+
+  /* ── 5. SCROLL ANIMATIONS ───────────────────────────── */
+  function triggerAnimations(root = document) {
+    const els = root.querySelectorAll("[data-animate]");
+    if (!els.length) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add("in-view");
+          observer.unobserve(e.target);
         }
-    });
+      });
+    }, { threshold: 0.1 });
+    els.forEach(el => observer.observe(el));
+  }
 
-    // 3. BOUTON DE COPIE DU CODE DANS LE PRESSE-PAPIER
-    const copyButtons = document.querySelectorAll(".copy-btn");
+  // Déclencher pour la section active initiale
+  const initialActive = document.querySelector(".content-section.active");
+  if (initialActive) triggerAnimations(initialActive);
 
-    copyButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            // Récupérer le bloc <pre> qui suit l'en-tête du code
-            const codeBlock = button.parentElement.nextElementSibling.querySelector("code");
-            
-            navigator.clipboard.writeText(codeBlock.innerText).then(() => {
-                // Effet visuel temporaire de validation
-                const originalText = button.innerHTML;
-                button.innerHTML = '<i class="fa-solid fa-check" style="color: #10b981;"></i> Copié !';
-                
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                }, 2000);
-            }).catch(err => {
-                console.error("Erreur de copie : ", err);
-            });
-        });
-    });
 });

@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ── 1. THEME (identique au portfolio) ─────────────── */
   const htmlEl = document.documentElement;
-  const saved  = localStorage.getItem("theme") || "dark";
+  const saved  = localStorage.getItem("theme") || "light";
   htmlEl.setAttribute("data-theme", saved);
 
   function applyTheme(theme) {
@@ -21,10 +21,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ── 2. NAVIGATION INTERNE ─────────────────────────── */
-  const navItems = document.querySelectorAll(".nav-item[data-target]");
-  const sections = document.querySelectorAll(".content-section");
+  const navItems       = document.querySelectorAll(".nav-item[data-target]");
+  const sections       = document.querySelectorAll(".content-section");
+  const validSectionIds = new Set(Array.from(sections).map(s => s.id));
+  const DEFAULT_SECTION = "accueil";
 
-  function activateSection(targetId) {
+  function updateHash(targetId) {
+    const newHash = `#${targetId}`;
+    if (window.location.hash !== newHash) {
+      // pushState évite le saut de scroll natif du navigateur et garde l'historique (bouton "précédent")
+      history.pushState({ section: targetId }, "", newHash);
+    }
+  }
+
+  function activateSection(targetId, { updateURL = true, scroll = "smooth" } = {}) {
+    if (!validSectionIds.has(targetId)) return;
+
     // Mise à jour nav
     document.querySelector(".nav-item.active")?.classList.remove("active");
     document.querySelector(`.nav-item[data-target="${targetId}"]`)?.classList.add("active");
@@ -35,10 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (target) {
       target.classList.add("active");
       // Scroll to top
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: scroll });
       // Trigger animations
       requestAnimationFrame(() => triggerAnimations(target));
     }
+
+    if (updateURL) updateHash(targetId);
 
     // Fermer le menu mobile
     closeMobileSidebar();
@@ -56,6 +70,20 @@ document.addEventListener("DOMContentLoaded", () => {
       activateSection(card.getAttribute("data-target"));
     });
   });
+
+  // Ouverture directe sur une section via l'URL (ex: docs/#glpi) ou navigation précédent/suivant
+  function activateFromHash(scroll = "auto") {
+    const idFromHash = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+    const targetId = validSectionIds.has(idFromHash) ? idFromHash : DEFAULT_SECTION;
+    activateSection(targetId, { updateURL: false, scroll });
+  }
+
+  window.addEventListener("popstate", () => activateFromHash("smooth"));
+
+  // Au chargement de la page : si un hash valide est présent, on ouvre directement la bonne section
+  if (window.location.hash) {
+    activateFromHash("auto");
+  }
 
   /* ── 3. MOBILE SIDEBAR ──────────────────────────────── */
   const sidebar  = document.getElementById("sidebar");
